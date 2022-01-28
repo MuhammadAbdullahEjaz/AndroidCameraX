@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginEnd="17dp"
+    android:layout_width="73dp"
+    android:layout_height="75dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardMC"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="#EBEBEB"
+        app:strokeWidth="1dp">
+
+<!--    <color name="gray_1.2">#EBEBEB</color>    -->
+
+        <ImageView
+            android:id="@+id/addImageIV"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:contentDescription=""
+            android:scaleType="fitXY"
+            tools:src="" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addImageIVB"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:backgroundTint="#F4F4F4"
+        android:insetLeft="0dp"
+        android:insetTop="0dp"
+        android:insetRight="0dp"
+        android:insetBottom="0dp"
+        app:cornerRadius="50dp"
+        app:icon="@drawable/ic_cancel"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<!--        <color name="gray_1">#F4F4F4</color>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
