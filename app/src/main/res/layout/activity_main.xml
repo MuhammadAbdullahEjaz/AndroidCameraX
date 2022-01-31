@@ -71,6 +71,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </com.google.android.material.card.MaterialCardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/addImageRV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="@id/previewContainer"
+            app:layout_constraintStart_toStartOf="@id/viewFinderCard"
+            app:layout_constraintTop_toBottomOf="@id/viewFinderCard"
+            app:layout_constraintEnd_toEndOf="@id/viewFinderCard"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -89,23 +102,17 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/previewContainer" />
 
-    <Button
-        android:id="@+id/video_capture_button"
-        android:layout_width="73dp"
-        android:layout_height="73dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginBottom="50dp"
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/gallery"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="30dp"
         android:elevation="2dp"
+        android:background="@drawable/gallery_border"
         android:text="@string/start_capture"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/vertical_centerline" />
+        app:layout_constraintBottom_toBottomOf="@id/image_capture_button"
+        app:layout_constraintTop_toTopOf="@id/image_capture_button"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/vertical_centerline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent=".50" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
