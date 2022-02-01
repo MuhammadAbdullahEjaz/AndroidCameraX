@@ -3,6 +3,7 @@ package com.example.camera
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
+import android.content.ContentUris
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
@@ -16,9 +17,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ExecutorService
 import android.provider.MediaStore
-
 import android.content.ContentValues
 import android.os.Build
+import androidx.activity.result.contract.ActivityResultContracts
 
 typealias LumaListener = (luma: Double) -> Unit
 
@@ -26,6 +27,12 @@ typealias LumaListener = (luma: Double) -> Unit
 class MainActivity : AppCompatActivity() {
 
     val viewModel: MainViewModel = MainViewModel()
+
+    val imageSelectionActivity = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
+        it.forEach {
+            Log.d("fetch","$it")
+        }
+    }
 
     private lateinit var viewBinding: ActivityMainBinding
     private var cameraControl: CameraControl? = null
@@ -48,9 +55,9 @@ class MainActivity : AppCompatActivity() {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
-        val adapter = AddImageRvAdapter()
+        val adapter = AddImageRvAdapter(this)
         viewModel.images.observe(this) {
-             Log.d("fetch", "data changed")
+            Log.d("fetch", "data changed: data: $it")
             adapter.updateData(it)
         }
         viewBinding.addImageRV.adapter = adapter
@@ -66,15 +73,42 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewBinding.cameraB.setOnClickListener {
-            if (lensFacing == CameraSelector.LENS_FACING_BACK) {
-                lensFacing = CameraSelector.LENS_FACING_FRONT
+            lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
+                CameraSelector.LENS_FACING_FRONT
             } else {
-                lensFacing = CameraSelector.LENS_FACING_BACK
+                CameraSelector.LENS_FACING_BACK
             }
             startCamera()
         }
         // Set up the listeners for take photo and video capture buttons
         viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
+        viewBinding.gallery.setOnClickListener {
+//            applicationContext.contentResolver.query(
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                arrayOf(
+//                    MediaStore.Images.ImageColumns._ID,
+//                    MediaStore.Images.ImageColumns.DISPLAY_NAME
+//                ),
+//                null,
+//                null,
+//                null
+//            )?.use {
+//                val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
+//                val displayNameColumn =
+//                    it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DISPLAY_NAME)
+//                Log.d("fetch","dataCount: ${it.count}")
+//                while (it.moveToNext()) {
+//                    val id = it.getLong(idColumn)
+//                    val displayName = it.getString(displayNameColumn)
+//                    val contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,id)
+//                    Log.d("fetch", "dir: ${contentUri}")
+//                }
+//                it.close()
+//            }
+
+            imageSelectionActivity.launch("image/jpeg")
+
+        }
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -112,8 +146,7 @@ class MainActivity : AppCompatActivity() {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
                 }
 
-                override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults) {
+                override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                     val savedUri = output.savedUri
                     viewModel.updateImages(listOf(savedUri!!))
                     val msg = "Photo capture succeeded: ${savedUri}"
@@ -123,7 +156,6 @@ class MainActivity : AppCompatActivity() {
             }
         )
     }
-
 
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
