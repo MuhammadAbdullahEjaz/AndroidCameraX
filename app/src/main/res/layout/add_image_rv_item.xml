@@ -24,7 +24,7 @@
             android:layout_width="65dp"
             android:layout_height="65dp"
             android:contentDescription=""
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             tools:src="" />
     </com.google.android.material.card.MaterialCardView>
 
@@ -41,6 +41,7 @@
         android:insetBottom="0dp"
         app:cornerRadius="50dp"
         app:icon="@drawable/ic_cancel"
+        app:iconTint="@color/black"
         app:iconGravity="textStart"
         app:iconPadding="0dp"
         app:layout_constraintEnd_toEndOf="parent"

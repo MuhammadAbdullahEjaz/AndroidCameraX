@@ -10,7 +10,7 @@ class MainViewModel:ViewModel() {
     val images:LiveData<List<Uri>> get() = _images
 
     fun updateImages(images:List<Uri>){
-        _images.postValue(_images.value?.plus(images))
+        _images.postValue(_images.value?.plus(images)?.toSet()?.toList() )
     }
 
 }

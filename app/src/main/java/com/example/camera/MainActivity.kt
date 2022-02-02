@@ -18,28 +18,33 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import android.provider.MediaStore
 import android.content.ContentValues
+import android.net.Uri
 import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContentResolverCompat.query
 
 typealias LumaListener = (luma: Double) -> Unit
 
 
 class MainActivity : AppCompatActivity() {
+    val viewModel: MainViewModel by viewModels()
 
-    val viewModel: MainViewModel = MainViewModel()
-
-    val imageSelectionActivity = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) {
-        it.forEach {
-            Log.d("fetch","$it")
+    val imageSelectionActivity =
+        registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { it ->
+            it.forEach {
+                Log.d("fetch", "$it")
+            }
+            viewModel.updateImages(it)
         }
-    }
 
     private lateinit var viewBinding: ActivityMainBinding
     private var cameraControl: CameraControl? = null
     private var cameraInfo: CameraInfo? = null
     private var imageCapture: ImageCapture? = null
     private var lensFacing = CameraSelector.LENS_FACING_BACK
-
+    private val TAG = "fetch"
     private lateinit var cameraExecutor: ExecutorService
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,10 +62,12 @@ class MainActivity : AppCompatActivity() {
         }
         val adapter = AddImageRvAdapter(this)
         viewModel.images.observe(this) {
-            Log.d("fetch", "data changed: data: $it")
+            Log.d(TAG, "data changed: data: $it")
             adapter.updateData(it)
         }
         viewBinding.addImageRV.adapter = adapter
+
+        //FlashButton Click Listener
         viewBinding.flashB.setOnClickListener {
             if (cameraInfo?.torchState?.value == 1) {
                 cameraControl?.enableTorch(false)
@@ -69,9 +76,10 @@ class MainActivity : AppCompatActivity() {
                 cameraControl?.enableTorch(true)
                 viewBinding.flashB.setImageResource(R.drawable.ic_baseline_flash_on_24)
             }
-            Log.d("fetch", "flash: ${cameraInfo?.torchState?.value}")
+            Log.d(TAG, "flash: ${cameraInfo?.torchState?.value}")
         }
 
+        //CameraButton Click Listener (Change switch camera FRONT/BACK)
         viewBinding.cameraB.setOnClickListener {
             lensFacing = if (lensFacing == CameraSelector.LENS_FACING_BACK) {
                 CameraSelector.LENS_FACING_FRONT
@@ -80,35 +88,51 @@ class MainActivity : AppCompatActivity() {
             }
             startCamera()
         }
-        // Set up the listeners for take photo and video capture buttons
-        viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
-        viewBinding.gallery.setOnClickListener {
-//            applicationContext.contentResolver.query(
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                arrayOf(
-//                    MediaStore.Images.ImageColumns._ID,
-//                    MediaStore.Images.ImageColumns.DISPLAY_NAME
-//                ),
-//                null,
-//                null,
-//                null
-//            )?.use {
-//                val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
-//                val displayNameColumn =
-//                    it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DISPLAY_NAME)
-//                Log.d("fetch","dataCount: ${it.count}")
-//                while (it.moveToNext()) {
-//                    val id = it.getLong(idColumn)
-//                    val displayName = it.getString(displayNameColumn)
-//                    val contentUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,id)
-//                    Log.d("fetch", "dir: ${contentUri}")
-//                }
-//                it.close()
-//            }
 
-            imageSelectionActivity.launch("image/jpeg")
+        // Set up the listeners for take photo and video capture buttons
+        viewBinding.imageCaptureButton.setOnClickListener {
+            takePhoto()
+        }
+
+        //GalleryButton Click Listener (Selecting images from gallery)
+        viewBinding.gallery.setOnClickListener {
+
+            val images:MutableList<Uri> = mutableListOf()
+
+            Log.d("fetch","onGalleryClick")
+            val query = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                arrayOf(
+                    MediaStore.Images.ImageColumns._ID,
+                    MediaStore.Images.ImageColumns.DISPLAY_NAME,
+                ),
+                null,
+                null,
+                null
+            )
+            query?.use {
+                val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
+                val displayNameColumn =
+                    it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DISPLAY_NAME)
+                Log.d("fetch","dataCount: ${it.count}")
+                while (it.moveToNext()) {
+
+                    val id = it.getLong(idColumn)
+                    val displayName = it.getString(displayNameColumn)
+                    val contentUris = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                    images.add(contentUris)
+                    Log.d("fetch", "Images: $id, $displayName, $contentUris")
+                }
+                it.close()
+            }
+
+            viewModel.updateImages(images)
+
+//            Accessing images by gallery with system intent
+//            imageSelectionActivity.launch("image/jpeg")
 
         }
+
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
