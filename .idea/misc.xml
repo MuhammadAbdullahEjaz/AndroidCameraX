@@ -12,6 +12,8 @@
         <entry key="..\:/Users/Quantum/AndroidStudioProjects/Camera/app/src/main/res/drawable/preview_view_border.xml" value="0.1065" />
         <entry key="..\:/Users/Quantum/AndroidStudioProjects/Camera/app/src/main/res/layout/activity_main.xml" value="0.21274601686972822" />
         <entry key="..\:/Users/Quantum/AndroidStudioProjects/Camera/app/src/main/res/layout/add_image_rv_item.xml" value="0.67" />
+        <entry key="..\:/Users/Quantum/AndroidStudioProjects/Camera/app/src/main/res/layout/fragment_camera.xml" value="0.21" />
+        <entry key="..\:/Users/Quantum/AndroidStudioProjects/Camera/app/src/main/res/layout/fragment_image_picker.xml" value="0.12083333333333333" />
       </map>
     </option>
   </component>

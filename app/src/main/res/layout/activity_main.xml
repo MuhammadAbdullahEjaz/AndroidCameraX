@@ -1,118 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.fragment.app.FragmentContainerView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/navHostFragment"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:name="androidx.navigation.fragment.NavHostFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    tools:context=".MainActivity">
+    app:defaultNavHost="true"
+    app:navGraph="@navigation/nav_graph"
+    tools:context=".MainActivity" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/previewContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/preview_container_border"
-        app:layout_constraintBottom_toTopOf="@id/image_capture_button"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/cancelB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:src="@drawable/ic_cancel"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="@id/cameraB"
-            app:layout_constraintBottom_toBottomOf="@id/cameraB"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/flashB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_baseline_flash_off_24"
-            android:backgroundTint="@color/black"
-            app:layout_constraintTop_toTopOf="@id/cameraB"
-            app:layout_constraintBottom_toBottomOf="@id/cameraB"/>
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/cameraB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/black"
-            android:src="@drawable/ic_change_camera"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="18dp"/>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/viewFinderCard"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:cardCornerRadius="27dp"
-            app:strokeColor="#707070"
-            app:strokeWidth="1dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="100dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="100dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-
-            <androidx.camera.view.PreviewView
-                android:id="@+id/viewFinder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </com.google.android.material.card.MaterialCardView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/addImageRV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="2dp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="@id/previewContainer"
-            app:layout_constraintStart_toStartOf="@id/viewFinderCard"
-            app:layout_constraintTop_toBottomOf="@id/viewFinderCard"
-            app:layout_constraintEnd_toEndOf="@id/viewFinderCard"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/image_capture_button"
-        android:layout_width="73dp"
-        android:layout_height="73dp"
-        android:layout_marginTop="68dp"
-        android:layout_marginBottom="23dp"
-        android:background="@drawable/capture_button"
-        android:elevation="2dp"
-        android:text="10/10"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/previewContainer" />
-
-    <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/gallery"
-        android:layout_width="44dp"
-        android:layout_height="44dp"
-        android:layout_marginStart="30dp"
-        android:elevation="2dp"
-        android:background="@drawable/gallery_border"
-        android:text="@string/start_capture"
-        app:layout_constraintBottom_toBottomOf="@id/image_capture_button"
-        app:layout_constraintTop_toTopOf="@id/image_capture_button"
-        app:layout_constraintStart_toStartOf="parent"/>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
