@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android_Projects/AndroidCameraX/app/src/main/res/layout/fragment_image_picker.xml" value="0.22826086956521738" />
+        <entry key="..\:/Android_Projects/AndroidCameraX/app/src/main/res/layout/images_rv_item.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/Quantum/AndroidStudioProjects/Camera/app/src/main/res/drawable/capture_button.xml" value="0.1065" />
         <entry key="..\:/Users/Quantum/AndroidStudioProjects/Camera/app/src/main/res/drawable/gallery_border.xml" value="0.129" />
         <entry key="..\:/Users/Quantum/AndroidStudioProjects/Camera/app/src/main/res/drawable/ic_baseline_flash_off_24.xml" value="0.1305" />

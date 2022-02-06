@@ -19,6 +19,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.camera.databinding.FragmentCameraBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -90,39 +91,7 @@ class Camera : Fragment() {
 
         //GalleryButton Click Listener (Selecting images from gallery)
         viewBinding.gallery.setOnClickListener {
-
-            val images: MutableList<Uri> = mutableListOf()
-
-            Log.d("fetch", "onGalleryClick")
-            val query = requireContext().contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                arrayOf(
-                    MediaStore.Images.ImageColumns._ID,
-                    MediaStore.Images.ImageColumns.DISPLAY_NAME,
-                ),
-                null,
-                null,
-                ""
-            )
-            query?.use {
-                val idColumn = it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns._ID)
-                val displayNameColumn =
-                    it.getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DISPLAY_NAME)
-                Log.d("fetch", "dataCount: ${it.count}")
-                while (it.moveToNext()) {
-
-                    val id = it.getLong(idColumn)
-                    val displayName = it.getString(displayNameColumn)
-                    val contentUris =
-                        ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-                    images.add(contentUris)
-                    Log.d("fetch", "Images: $id, $displayName, $contentUris")
-                }
-                it.close()
-            }
-
-            viewModel.updateImages(images)
-
+            findNavController().navigate(R.id.action_camera_to_imagePicker)
 //            Accessing images by gallery with system intent
 //            imageSelectionActivity.launch("image/jpeg")
 
