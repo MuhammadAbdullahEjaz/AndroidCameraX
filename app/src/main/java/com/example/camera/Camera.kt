@@ -1,10 +1,8 @@
 package com.example.camera
 
 import android.Manifest
-import android.content.ContentUris
 import android.content.ContentValues
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -41,8 +39,9 @@ class Camera : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         viewBinding = FragmentCameraBinding.inflate(layoutInflater)
+        viewBinding.lifecycleOwner = viewLifecycleOwner
         return viewBinding.root
     }
 
@@ -55,11 +54,13 @@ class Camera : Fragment() {
                 requireActivity(), Camera.REQUIRED_PERMISSIONS, Camera.REQUEST_CODE_PERMISSIONS
             )
         }
-        val adapter = AddImageRvAdapter(requireContext())
+        val adapter = AddImageRvAdapter(
+            requireContext(),
+            onImageRemove = { image -> viewModel.removeImage(image) })
         viewModel.images.observe(viewLifecycleOwner) {
-            Log.d(TAG, "data changed: data: $it")
             adapter.updateData(it)
         }
+        viewBinding.viewModel = viewModel
         viewBinding.addImageRV.adapter = adapter
 
         //FlashButton Click Listener
@@ -86,7 +87,9 @@ class Camera : Fragment() {
 
         // Set up the listeners for take photo and video capture buttons
         viewBinding.imageCaptureButton.setOnClickListener {
-            takePhoto()
+            if (viewModel.images.value!!.size < 10) {
+                takePhoto()
+            }
         }
 
         //GalleryButton Click Listener (Selecting images from gallery)
@@ -139,7 +142,7 @@ class Camera : Fragment() {
                     viewModel.updateImages(listOf(savedUri!!))
                     val msg = "Photo capture succeeded: ${savedUri}"
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-                    Log.d(TAG, msg)
+                    //Log.d(TAG, msg)
                 }
             }
         )

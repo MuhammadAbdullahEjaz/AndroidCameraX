@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 
-class AddImageRvAdapter(private val context:Context):RecyclerView.Adapter<AddImageRvAdapter.ItemCardView>() {
+class AddImageRvAdapter(private val context:Context,val onImageRemove:(Uri)->Unit):RecyclerView.Adapter<AddImageRvAdapter.ItemCardView>() {
 
     private var imageData:List<Uri> = emptyList()
 
@@ -29,6 +29,7 @@ class AddImageRvAdapter(private val context:Context):RecyclerView.Adapter<AddIma
             }
             Glide.with(context).load(imageSrc).into(imageView)
             cancalButton.setOnClickListener {
+                onImageRemove(imageSrc)
                 Log.d("cross", "cancelled clicked")
             }
         }
